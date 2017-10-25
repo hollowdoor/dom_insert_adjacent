@@ -27,5 +27,9 @@
       "src": "test/src.js"
     }
   },
-  "author": "Quentin Engles <hollowdoor99@gmail.com> (https://hollowdoor.github.io)"
+  "author": "Quentin Engles <hollowdoor99@gmail.com> (https://hollowdoor.github.io)",
+  "dependencies": {
+    "dom-is-element": "^1.0.0",
+    "raw-object": "^1.0.0"
+  }
 }
