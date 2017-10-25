@@ -1,30 +1,30 @@
 import isElement from 'dom-is-element';
 import rawObject from 'raw-object';
 
-const insertAdjacentElement = (()=>{
-    let div = document.createElement('div');
+var insertAdjacentElement = (function (){
+    var div = document.createElement('div');
     if(div.insertAdjacentElement){
         div = null;
-        return (d, p, v)=>d.insertAdjacentElement(p, v);
+        return function (d, p, v){ return d.insertAdjacentElement(p, v); };
     }
     div = null;
 
-    const ops = rawObject({
-        beforebegin(d, v){
+    var ops = rawObject({
+        beforebegin: function beforebegin(d, v){
              d.parentNode.insertBefore(v, d);
         },
-        afterbegin(d, v){
+        afterbegin: function afterbegin(d, v){
             d.insertBefore(v, d.firstChild);
         },
-        beforeend(d, v){
+        beforeend: function beforeend(d, v){
             d.appendChild(v);
         },
-        afterend(d, v){
+        afterend: function afterend(d, v){
             d.parentNode.insertBefore(v, d.nextSibling);
         }
     });
 
-    return (d, p, v)=>{
+    return function (d, p, v){
         if(!ops[p]){
             throw new Error(p + ' is not a valid operation for insertAdjacent');
         }
@@ -33,8 +33,8 @@ const insertAdjacentElement = (()=>{
 
 })();
 
-export function insertAll(dest, position, values){
-    values.forEach(value=>{
+function insertAll(dest, position, values){
+    values.forEach(function (value){
         if(isElement(value)){
             return insertAdjacentElement(dest, position, value);
         }
@@ -42,6 +42,12 @@ export function insertAll(dest, position, values){
     });
 }
 
-export function insertAdjacent(dest, position, ...values){
+function insertAdjacent(dest, position){
+    var values = [], len = arguments.length - 2;
+    while ( len-- > 0 ) values[ len ] = arguments[ len + 2 ];
+
     return insertAll(dest, position, values);
 }
+
+export { insertAll, insertAdjacent };
+//# sourceMappingURL=bundle.es.js.map
