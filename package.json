@@ -1,0 +1,31 @@
+{
+  "name": "dom-insert-adjacent",
+  "description": "Insert an element, or html into another element",
+  "keywords": [
+    "insert",
+    "DOM",
+    "html"
+  ],
+  "version": "1.0.0",
+  "scripts": {
+    "build": "ebam",
+    "test": "echo \"no test\""
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hollowdoor/dom_insert_adjacent.git"
+  },
+  "ebam": {
+    "entry": "src/index.js",
+    "transforms": {
+      "dangerousForOf": false,
+      "dangerousTaggedTemplateString": false
+    },
+    "test": {
+      "dest": "test/code.js",
+      "src": "test/src.js"
+    }
+  },
+  "author": "Quentin Engles <hollowdoor99@gmail.com> (https://hollowdoor.github.io)"
+}
