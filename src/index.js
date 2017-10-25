@@ -11,27 +11,34 @@ const insertAdjacentElement = (()=>{
 
     const ops = rawObject({
         beforebegin(d, v){
-             return d.parentNode.insertBefore(v, d);
+             d.parentNode.insertBefore(v, d);
         },
         afterbegin(d, v){
-            return d.insertBefore(v, d.firstChild);
+            d.insertBefore(v, d.firstChild);
         },
         beforeend(d, v){
-            return d.appendChild(v);
+            d.appendChild(v);
         },
         afterend(d, v){
-             return d.parentNode.insertBefore(v, d.nextSibling);
+            d.parentNode.insertBefore(v, d.nextSibling);
         }
     });
 
-    return (d, p, v)=>ops[p](d, v);
+    return (d, p, v)=>{
+        if(!ops[p]){
+            throw new Error(p + ' is not a valid operation for insertAdjacent');
+        }
+        ops[p](d, v);
+    };
 
 })();
 
-export default function insertAdjacent(dest, position, value){
+export default function insertAdjacent(dest, position, ...values){
 
-    if(isElement(value)){
-        return insertAdjacentElement(dest, position, value);
-    }
-    return dest.insertAdjacentHTML(position, value + '');
+    values.forEach(value=>{
+        if(isElement(value)){
+            return insertAdjacentElement(dest, position, value);
+        }
+        dest.insertAdjacentHTML(position, value + '');
+    });
 }
