@@ -14,7 +14,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hollowdoor/dom_insert_adjacent.git"
+    "url": "git+https://github.com/hollowdoor/dom_insert_adjacent.git"
   },
   "ebam": {
     "entry": "src/index.js",
@@ -35,5 +35,13 @@
   },
   "main": "dist/bundle.js",
   "jsnext:main": "dist/bundle.es.js",
-  "module": "dist/bundle.es.js"
+  "module": "dist/bundle.es.js",
+  "bugs": {
+    "url": "https://github.com/hollowdoor/dom_insert_adjacent/issues"
+  },
+  "homepage": "https://github.com/hollowdoor/dom_insert_adjacent#readme",
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {}
 }
