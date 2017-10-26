@@ -1,3 +1,4 @@
+import getElement from 'dom-get-element';
 import isElement from 'dom-is-element';
 import rawObject from 'raw-object';
 
@@ -33,12 +34,31 @@ const insertAdjacentElement = (()=>{
 
 })();
 
-export function insertAll(dest, position, values){
+export function insert(dest, position, value){
+    if(isElement(value)){
+        return insertAdjacentElement(dest, position, value);
+    }
+    dest.insertAdjacentHTML(position, value + '');
+}
+
+export function insertInFragment(dest, position, values){
+    let div = document.createElement('div'), c;
+    div.appendChild(dest);
     values.forEach(value=>{
-        if(isElement(value)){
-            return insertAdjacentElement(dest, position, value);
+        insert(div, position, value);
+        while(c = div.firstChild){
+            dest.appendChild(c);
         }
-        dest.insertAdjacentHTML(position, value + '');
+    });
+}
+
+export function insertAll(dest, position, values){
+    if(dest.nodeType === Node.DOCUMENT_FRAGMENT_NODE){
+        return insertInFragment(dest, position, values);
+    }
+    dest = getElement(dest);
+    values.forEach(value=>{
+        insert(dest, position, value);
     });
 }
 

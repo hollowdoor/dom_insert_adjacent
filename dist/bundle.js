@@ -4,6 +4,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
+var getElement = _interopDefault(require('dom-get-element'));
 var isElement = _interopDefault(require('dom-is-element'));
 var rawObject = _interopDefault(require('raw-object'));
 
@@ -39,12 +40,31 @@ var insertAdjacentElement = (function (){
 
 })();
 
-function insertAll(dest, position, values){
+function insert(dest, position, value){
+    if(isElement(value)){
+        return insertAdjacentElement(dest, position, value);
+    }
+    dest.insertAdjacentHTML(position, value + '');
+}
+
+function insertInFragment(dest, position, values){
+    var div = document.createElement('div'), c;
+    div.appendChild(dest);
     values.forEach(function (value){
-        if(isElement(value)){
-            return insertAdjacentElement(dest, position, value);
+        insert(div, position, value);
+        while(c = div.firstChild){
+            dest.appendChild(c);
         }
-        dest.insertAdjacentHTML(position, value + '');
+    });
+}
+
+function insertAll(dest, position, values){
+    if(dest.nodeType === Node.DOCUMENT_FRAGMENT_NODE){
+        return insertInFragment(dest, position, values);
+    }
+    dest = getElement(dest);
+    values.forEach(function (value){
+        insert(dest, position, value);
     });
 }
 
@@ -55,6 +75,8 @@ function insertAdjacent(dest, position){
     return insertAll(dest, position, values);
 }
 
+exports.insert = insert;
+exports.insertInFragment = insertInFragment;
 exports.insertAll = insertAll;
 exports.insertAdjacent = insertAdjacent;
 //# sourceMappingURL=bundle.js.map

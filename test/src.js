@@ -1,5 +1,9 @@
 import { insertAdjacent } from '../';
 
+let doc1 = document.createDocumentFragment();
+insertAdjacent(doc1, 'afterbegin', '<p>beforebegin</p>');
+console.log(doc1);
+
 const div1 = document.querySelector('#div1');
 insertAdjacent(div1, 'beforebegin', "<p>beforebegin</p>")
 insertAdjacent(div1, 'afterbegin', "<p>afterbegin</p>")

@@ -14,6 +14,29 @@ function isElement(o){
     );
 }
 
+function getElement(element, context){
+    if ( context === void 0 ) { context = document; }
+
+    if(typeof element === 'string'){
+        try{
+            return context.querySelector(element);
+        }catch(e){ throw e; }
+    }
+
+    if(isElement(element)) { return element; }
+
+    if(!!element && typeof element === 'object'){
+        if(isElement(element.element)){
+            return element.element;
+        }else if(isElement(element[0])){
+            return element[0];
+        }
+    }
+
+    throw new TypeError(("value (" + element + ") in isElement(value)\n    is not an element, valid css selector,\n    or object with an element property, or index 0."));
+
+}
+
 /*
 object-assign
 (c) Sindre Sorhus
@@ -162,12 +185,31 @@ var insertAdjacentElement = (function (){
 
 })();
 
-function insertAll(dest, position, values){
+function insert(dest, position, value){
+    if(isElement(value)){
+        return insertAdjacentElement(dest, position, value);
+    }
+    dest.insertAdjacentHTML(position, value + '');
+}
+
+function insertInFragment(dest, position, values){
+    var div = document.createElement('div'), c;
+    div.appendChild(dest);
     values.forEach(function (value){
-        if(isElement(value)){
-            return insertAdjacentElement(dest, position, value);
+        insert(div, position, value);
+        while(c = div.firstChild){
+            dest.appendChild(c);
         }
-        dest.insertAdjacentHTML(position, value + '');
+    });
+}
+
+function insertAll(dest, position, values){
+    if(dest.nodeType === Node.DOCUMENT_FRAGMENT_NODE){
+        return insertInFragment(dest, position, values);
+    }
+    dest = getElement(dest);
+    values.forEach(function (value){
+        insert(dest, position, value);
     });
 }
 
@@ -178,6 +220,8 @@ function insertAdjacent(dest, position){
     return insertAll(dest, position, values);
 }
 
+exports.insert = insert;
+exports.insertInFragment = insertInFragment;
 exports.insertAll = insertAll;
 exports.insertAdjacent = insertAdjacent;
 
